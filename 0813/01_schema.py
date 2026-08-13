@@ -129,6 +129,26 @@ for path in sorted(DATA_DIR.glob("*.csv")):
     tables[path.stem] = {
         "columns" : columns,
         "rows" : rows,
-        "type" : {col:infer_type([r[col] for i rows]) for col in columns},
+        "type" : {col:infer_type([r.get(col) for r in rows]) for col in columns},
         "pk" : infer_pk(colums, rows)
     }
+print(tables["customers"])
+
+
+# 2. 특정 테이블에 연결되어 있는 외래키 찾기
+for name, table in tables.item() : #표 이름과 내용을 그룹으로 꺼냄
+    fks = []
+    for col in tabgle["colsumns"] :
+        if not col.endswith("_id"):
+            continue
+        owner = owner_of(col, tables)
+        if not owner or owner == name :
+            continue
+        if tables[owner]["pk"] != col :
+            continue
+        fks.append((col,owner))
+
+        table["fks"] = fks
+
+        print(fks)
+
