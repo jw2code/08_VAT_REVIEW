@@ -91,3 +91,44 @@ for path in sorted(DATA_DIR.glob("*.csv")) :
         example = next((r[column] for r in rows if r[column] != ""),"")
 
         print(f"{column} : {kind}")
+
+# Pk를 찾아주는 함수
+def infer_pk(columns, rows) :
+    for col in columns : 
+        if not col.endsvith("_id") :
+            continue
+
+        values = [r[col] for r in rows]
+        if "" in values :
+            continue
+        # value값이 중복되지 않으면 그건 PK
+        if len(set(values)) == len(values) :
+            return col
+
+    # 위의 조건이 모두 만족하지 않는다면 PK가 없음
+    return None
+
+
+
+
+# 특정 PK의 주인 테이블 찾기
+def owner_of(column, tables) :
+    # 첫번째 인자로 들어온 PK에서 _id제거하고 그 뒤에 s, es붙여서
+    # 두번째 인자로 들어온 테이블 리스트랑 매칭이 되는 이름을 찾음(해당 pK의 주인 테이블 명)
+    stem = column[:-3]
+    for candidate in (stem, stem+"s", stem+"es") :
+        if candidate in tables :
+            return candidate
+        
+    return None
+
+# 1. 모든 테이블별 필드, 데이터타입, PK 구하기
+tables = {}
+for path in sorted(DATA_DIR.glob("*.csv")):
+    colums, rows = read_csv(path)
+    tables[path.stem] = {
+        "columns" : columns,
+        "rows" : rows,
+        "type" : {col:infer_type([r[col] for i rows]) for col in columns},
+        "pk" : infer_pk(colums, rows)
+    }
