@@ -30,7 +30,7 @@ for path in sorted(DATA_DIR.glob("*.csv")):
     # 실제 각 csv 파일의 필드명, 필드값 확인   
     for column in columns :
         value = rows[0][column]
-        print(value)
+
 
 # 해당 값이 정수인지 확인하는 함수
 def looks_int(text):
@@ -64,3 +64,30 @@ print(looks_float("3"))
 
 def looks_data(text):
     return re.fullmatch(r"\d{4}-\{2}-\d{2}",text)
+
+# 타입 추론 함수 생성
+def infer_type(values):
+    seen = [v for v in values if v!=""]
+    if not seen :
+        return "TEXT"
+    if all(looks_int(v) for v in seen) :
+        return "INTEGER"
+    if all(looks_float(v) for v in seen) :
+        return "FLOAT"
+    if all(looks_data(v) for v in seen) :
+        return "DATE"
+
+    return"TEXT"
+
+# 모든 csv파일을 하나씩 검사해서 컬럼명과 각 행의 값의 타입을 분석
+for path in sorted(DATA_DIR.glob("*.csv")) :
+    columns, rows = read_csv(path)
+    print(f"\n{path.stem} ({len(rows)})")
+    for column in columns :
+        kind = infer_type(r[column] for r in rows)
+
+        # next(조건에 맞는 값, 디폴트값)->조건에 맞는 값이 반복되면 하나만 출력하고 건너뜀, 조건문으로 빈 문자열 출력 그렇게 건너뛴 값을 반환
+        # 반복되는 필드명을 출력하고 싶을 때
+        example = next((r[column] for r in rows if r[column] != ""),"")
+
+        print(f"{column} : {kind}")
