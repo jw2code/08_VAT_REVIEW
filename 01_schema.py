@@ -213,8 +213,14 @@ for name in table_order:
     for row in table["rows"] 
   ]
 
-  con.executemany(f"INSERT INTO {name} ({", ".join(columns)}) VALUES ({placeholders})", values,)
+quoted_columns = ", ".join(f'"{col}"' for col in columns)
 
-  for col, _owner in table["fks"]:   
-    con.execute(f"CREATE INDEX idx_{name}_{col} on {name}({col})")
-con.commit()
+con.executemany(
+    f'INSERT INTO "{name}" ({quoted_columns}) VALUES ({placeholders})',
+    values
+)
+
+for col, _owner in table["fks"]:
+    con.execute(
+        f'CREATE INDEX "idx_{name}_{col}" ON "{name}"("{col}")'
+    )
