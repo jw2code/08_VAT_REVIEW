@@ -20,8 +20,37 @@ def query(sql, params=()):
     return con.execute(sql, params).fetchall()
 
 # 하나의 행 정보만 반환하는 함수(고객정보)
-def one(sql, params=())
+def one(sql, params=()):
     return con.execute(sql,params).fetchone()
+
+#컬럼명이 붙은 딕셔너리 목록으로 꺼내주는 함수
+def dicts(sql, params=()):
+ # con.execute로 반환된 결과값에서 fetchone, fetchall로 꺼내지 않는 객체를 Cursor라고함
+ # Cursor : description, fetchall(), fetchone()
+ # Cursor객체의 description에는 각 컬럼의 정보가 담겨있음
+    cur = con.execute(sql,params)
+    column = [c[0] for c in cur.description]
+    print(columns)
+
+    return [dict(zip(columns, rows)) for row in fetchall()]
+
+if __name__ == "__main__"
+# C001이라는 아이디의 고객정보를 가져오는 구문
+    info = one("SELECT * FROM customers WHERE customer_id = ?", ("C001",))
+    print(info)
+
+print(dicts("SELECT * FROM customers LIMITS 5"))
+
+
+# 해당 파일의 함수는 보통 다른 파일에서 해당 함수를 각각
+# columns = ["name","age"]
+# rows = ("홍길동",20)
+
+# zip(columns, rows) 컬럼 이름과 행의 값을 같은 순서끼리 짝지어줌
+# ("name","홍길동"), ("age", 20)
+# dict(zip(colums, rows))
+# {"name":"홍길동", "age":20}
+# dict() : zip()으로 만든 짝을 {컬럼명 : 값} 형태의 딕셔너리로 변환
 
 
 one("SELECT * FROM customers WHERE customer_id = ?", ("C001",))
