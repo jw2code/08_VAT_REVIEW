@@ -69,4 +69,11 @@ print("--------------------------------")
 
 text = "안녕하세요. 반갑습니다."
 
-print(tok.tokenizer(text))
+print(tok.tokenize(text))
+
+text1 = "안녕하세요"
+text2 = "메틸데이트"
+
+# 같은 문자 갯수라도 모델이 학습이 완료된 단어와 학습이 완료되지 않은 특수 용어의 1토큰당 할당되는 문자 갯수가 다름
+print("안녕하세요", tok.tokenize(text1))
+print("메틸데이트", tok.tokenize(text2))
