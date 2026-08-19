@@ -27,3 +27,24 @@ DB_PATH = str(ROOT / "comestic.db")
 # AI 서비스 개발을 하기 위한, 청킨, 임베딩, LLM요청, 응답, 검증 등의 일괄적인 전체 프로세스를 표준화하기 위한 도구
 # 만약 langchain이 없으면 로컬에서 허깅페이스 버전으로 만들었을 때 다른 사용 API버전으로 변경 시 모든 코드 구조를 일일이 변경해야 하는 번거로움 있음
 # 이때 langchain을 쓰면 어떤 AI, 모델을 쓰더라도 표준 메서드명으로 통일해서 동작되는 표준규격 어댑터 제공
+
+"""
+# HuggingFace 방식
+vec = SentenceTransformer("bge-m3").encode("수분크림")
+
+# OpenAI 방식
+vec = client.embeddings.create(model="text-embedding-3-small", input="수분크림").data[0].embedding
+
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_openai import OpenAIEmbeddings
+
+emb = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
+# emb = OpenAIEmbeddings(model="text-embedding-3-small")   ← 이 줄만 바꾸면 끝
+
+vec = emb.embed_query("수분크림")   # 아래가 뭐든 호출 방법은 동일
+
+┌ LangChain         부품 갈아끼우기용 규격/어댑터 (얇음)
+├ sentence-transformers  임베딩 전용 편의 래퍼        (4.9MB)
+├ transformers           모델 로딩·토큰 계산 도구상자   (109MB)
+└ torch                  행렬 계산 엔진              (479MB)  ← 제일 무겁고 제일 아래
+"""
