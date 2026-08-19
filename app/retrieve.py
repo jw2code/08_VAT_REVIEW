@@ -89,7 +89,19 @@ def dashboard(customer_id) :
 if __name__ == "__main__" :
     # 고객정보를 2개까지 출력
     print(dashboard("C005"))
+    customer = board("customer")
+
+    print(f"\n대시보드 - {customer['name']}({customer['customer_id']})")
+    print(f"{customer['age']}세, {customer['gender']}, {customer['skin_type']}피부타입, {customer['city']}, 구매
+         {customer['n_purchase']}건")
+    print(f"    평균별점{board['avg_rating']}, 누적구매액{board['total_spent'],}원")
+    print()
+    for row in board["purchases"]:
     
+
+# 이 고객이 가입한 날짜 / 별이나 기타 이모지 기호가 갯수만큼 출력
+# 후기1, 후기2(줄바꿈 되도록 출력)
+
     """
     {'customers': 
     {'customer_id': 'C005', 
