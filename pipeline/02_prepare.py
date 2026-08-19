@@ -49,3 +49,24 @@ print(token_counts)
 
 dist(token_counts)
 print(dist(token_counts))
+
+# 현재 상품정보 데이터에서 지금 ai처리할때 수용되는 데이터의 퍼센트
+# 작업순서 먼저 모든 상품의 토큰 수 확인(full_token),
+# 그리고 최대 토큰을 넘어서지 않는 글의 데이터를 찾아 평균값 구함
+
+fits = [min(n, EMBED_MAX_TOKENS) / n for n in full_tokens]
+
+# n for n in full_tokens 각 상품 설명의 토큰수를 하나씩 확인
+# 모델에 들어가는 토큰수 / 전체 토큰수
+print(fits)
+
+pritn(f" 임베딩 모델 상한 : {EMBED_MAX_TOKENS}토큰 ({EMBED_TOKENIZER})")
+print(f" 상세 토큰 분포 : {dist(full_tokens)}")
+print(f" 상한초과 : {len(over)/len(full_tokens)}건 {len(over)/len(full_tokens) * 100 :.0f}%")
+print(f" 평균수용률 : {sum(fits)/len(fits)*100:.0f}%")
+
+print("--------------------------------")
+
+text = "안녕하세요. 반갑습니다."
+
+print(tok.tokenizer(text))
